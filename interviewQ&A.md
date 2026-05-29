@@ -83,3 +83,89 @@ Shared state is the central memory passed between nodes during execution.
 # Best Interview One-Liner
 
 > "LangGraph enables stateful, controllable, and dynamic AI workflows using nodes, edges, reducers, and shared state management."
+
+# Most Important Interview Questions
+
+## 1. What is ReAct architecture?
+
+### Answer
+
+ReAct combines reasoning, action, and observation loops to enable intelligent multi-step agent behavior.
+
+---
+
+## 2. Why are ReAct agents better than simple workflows?
+
+### Answer
+
+Because they iteratively reason after each tool execution and dynamically plan future actions.
+
+---
+
+## 3. What is checkpointing in LangGraph?
+
+### Answer
+
+Checkpointing persistently stores workflow state for recovery and continuation.
+
+---
+
+## 4. Why is `thread_id` important?
+
+### Answer
+
+It uniquely identifies conversation sessions and enables persistent memory retrieval.
+
+---
+
+## 5. Difference between `.stream()` and `.astream()`?
+
+### Answer
+
+`.stream()` is synchronous while `.astream()` is asynchronous and supports non-blocking concurrent execution.
+
+---
+
+## 6. Difference between `values` and `updates` stream mode?
+
+### Answer
+
+`values` streams full graph state, while `updates` streams only incremental changes.
+
+---
+
+## 7. Why does `astream_events()` provide more detailed output?
+
+### Answer
+
+Because it streams internal execution events such as node execution, state updates, and tool calls.
+
+---
+
+## 8. What is Interrupt in HITL?
+
+### Answer
+
+Interrupt pauses execution and waits for human or external input before continuing.
+
+---
+
+## 9. What is Command in LangGraph?
+
+### Answer
+
+Command controls workflow continuation after interruption or decision points.
+
+---
+
+## 10. Why is async execution important in AI agents?
+
+### Answer
+
+Async improves scalability, concurrency, responsiveness, and efficient execution of multiple tasks.
+
+---
+
+# Best Interview One-Liner
+
+> "LangGraph combines stateful workflows, streaming, checkpointing, and human-in-the-loop capabilities to build scalable and production-grade AI agent systems."

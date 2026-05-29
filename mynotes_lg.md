@@ -468,40 +468,420 @@ ReAct enables:
 
 ---
 
------------------------------------------------------------------------------------------
+# LangGraph Advanced Concepts — Interview Notes + Important Questions
 
-## ReAct agent architecture:
-    - 1. Act:
-    - 2. Observe:
-    - 3. Reason:
+# ReAct Agent Architecture
+
+## What is ReAct?
+
+### Answer
+
+ReAct stands for:
+
+```text id="eukbmy"
+Reason + Act + Observe
+```
+
+It combines:
+
+* Reasoning
+* Tool usage
+* Observation loops
+
+to enable intelligent multi-step agent behavior.
 
 ---
 
-## Persistent Checkpointing
+# ReAct Workflow
 
-## `config={"configurable":{"thread_id":"1"}}` - Importance of this
+```text id="vwt0j5"
+Reason -> Act -> Observe -> Reason
+```
 
+The agent continuously:
 
-## Steaming techniques in LangGraph
+1. Thinks
+2. Takes action
+3. Observes result
+4. Thinks again
 
-## Streaming 
-Methods: .stream() and astream()
+---
 
-- These methods are sync and async methods for streaming back results.
+# 1. Reason
 
-Additional parameters in streaming modes for graph state
+## Definition
 
-- **values** : This streams the full state of the graph after each node is called.
-- **updates** : This streams updates to the state of the graph after each node is called.
+The LLM analyzes:
 
-## Compare Values and Updates mode and when to use which?
+* User query
+* Current state
+* Previous observations
 
-## Use of async and interpret why it gives detailed output?
-`config = {"configurable": {"thread_id": "5"}}
+and decides what to do next.
 
-async for event in graph_builder.astream_events({"messages":["Hi My name is Rohan and I like to play cricket"]},config,version="v2"):
-    print(event)`
+---
 
-## Human In the Loop
-    - Command: 
-    - Interrupt: 
+## Example
+
+```text id="7f7c3m"
+User wants AI news and weather.
+Need search tool first.
+```
+
+---
+
+# 2. Act
+
+## Definition
+
+The agent executes:
+
+* Tool calls
+* API requests
+* Database queries
+
+based on reasoning.
+
+---
+
+## Example
+
+```text id="z04gcj"
+Call search_news tool
+```
+
+---
+
+# 3. Observe
+
+## Definition
+
+The agent reads tool outputs/results and updates its reasoning.
+
+---
+
+## Example
+
+```text id="xph4jp"
+News retrieved successfully.
+Now summarize results.
+```
+
+---
+
+# Why ReAct Is Important?
+
+### Answer
+
+ReAct enables:
+
+* Multi-step reasoning
+* Better tool orchestration
+* Dynamic planning
+* Iterative decision making
+
+---
+
+# Persistent Checkpointing
+
+## What is Persistent Checkpointing?
+
+### Answer
+
+Checkpointing stores graph state persistently so workflows can:
+
+* Resume later
+* Recover from failures
+* Maintain conversation memory
+
+---
+
+## Why Important?
+
+### Answer
+
+Useful for:
+
+* Long-running agents
+* Human-in-the-loop systems
+* Durable execution
+* Multi-session conversations
+
+---
+
+# `thread_id` Importance
+
+## Important Syntax
+
+```python id="gpfm6r"
+config = {
+    "configurable": {
+        "thread_id": "1"
+    }
+}
+```
+
+---
+
+## Why is `thread_id` important?
+
+### Answer
+
+`thread_id` uniquely identifies a conversation/session.
+
+It allows LangGraph to:
+
+* Restore previous state
+* Continue conversations
+* Retrieve checkpoints
+* Maintain memory across interactions
+
+---
+
+## Interview One-Liner
+
+> "`thread_id` acts as the persistent session identifier for graph state and memory recovery."
+
+---
+
+# Streaming Techniques in LangGraph
+
+## Main Streaming Methods
+
+### 1. `.stream()`
+
+Synchronous streaming.
+
+---
+
+### 2. `.astream()`
+
+Asynchronous streaming.
+
+---
+
+# Why Streaming Is Important?
+
+### Answer
+
+Streaming:
+
+* Provides real-time responses
+* Reduces perceived latency
+* Enables live state monitoring
+
+---
+
+# Streaming Modes
+
+# 1. `values` Mode
+
+## Definition
+
+Streams the complete graph state after every node execution.
+
+---
+
+## Example
+
+```python id="l1h1cf"
+graph.stream(
+    inputs,
+    stream_mode="values"
+)
+```
+
+---
+
+## Best Use Cases
+
+Use when:
+
+* Full debugging needed
+* Entire state inspection required
+* Monitoring complete workflow state
+
+---
+
+# 2. `updates` Mode
+
+## Definition
+
+Streams only incremental state changes after each node execution.
+
+---
+
+## Example
+
+```python id="jlwmc5"
+graph.stream(
+    inputs,
+    stream_mode="updates"
+)
+```
+
+---
+
+## Best Use Cases
+
+Use when:
+
+* Performance matters
+* Smaller payloads needed
+* Only changes are important
+
+---
+
+# Values vs Updates
+
+| Feature      | values     | updates      |
+| ------------ | ---------- | ------------ |
+| Output       | Full state | Only changes |
+| Payload Size | Larger     | Smaller      |
+| Debugging    | Better     | Moderate     |
+| Performance  | Slower     | Faster       |
+| Monitoring   | Complete   | Incremental  |
+
+---
+
+# Best Interview Answer
+
+### When to use `values`?
+
+Use `values` for debugging and complete state visibility.
+
+### When to use `updates`?
+
+Use `updates` for efficient streaming and production systems.
+
+---
+
+# Async Streaming
+
+## Important Syntax
+
+```python id="e99qzv"
+config = {
+    "configurable": {
+        "thread_id": "5"
+    }
+}
+
+async for event in graph.astream_events(
+    {
+        "messages": [
+            "Hi My name is Rohan"
+        ]
+    },
+    config,
+    version="v2"
+):
+    print(event)
+```
+
+---
+
+# Why Async Gives Detailed Output?
+
+## Answer
+
+`astream_events()` streams low-level execution events including:
+
+* Node start
+* Node end
+* State updates
+* Tool execution
+* LLM calls
+* Metadata
+
+This provides detailed observability into graph execution.
+
+---
+
+# Why Use Async?
+
+### Answer
+
+Async execution:
+
+* Improves concurrency
+* Prevents blocking
+* Handles multiple tasks efficiently
+* Enables scalable agent systems
+
+---
+
+# Human-in-the-Loop (HITL)
+
+## What is Human-in-the-Loop?
+
+### Answer
+
+Human-in-the-loop allows human intervention during agent execution before critical actions occur.
+
+---
+
+## Why Important?
+
+### Answer
+
+Used for:
+
+* Sensitive actions
+* Compliance workflows
+* Approval systems
+* Safer AI execution
+
+---
+
+# Interrupt
+
+## What is Interrupt?
+
+### Answer
+
+Interrupt pauses graph execution and waits for external/human input before continuing.
+
+---
+
+## Example Use Cases
+
+* Approval before payment
+* Database modification confirmation
+* Human review step
+
+---
+
+## Interview One-Liner
+
+> "Interrupt temporarily pauses workflow execution for external decision making."
+
+---
+
+# Command
+
+## What is Command?
+
+### Answer
+
+Command controls graph execution flow after interruption.
+
+---
+
+## Common Commands
+
+* Continue
+* Resume
+* Stop
+* Retry
+* Redirect
+
+---
+
+# HITL Workflow
+
+```text id="o1wb6m"
+Agent -> Interrupt -> Human Review -> Command -> Resume
+```
+
+---
